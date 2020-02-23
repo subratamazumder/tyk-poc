@@ -1,0 +1,33 @@
+{
+  "name": "Tyk mtls 2",
+  "api_id": "4",
+  "org_id": "default",
+  "use_keyless": true,
+  "auth": {
+    "auth_header_name": ""
+  },
+  "upstream_certificates" : {
+  	"*" : "6284bbb8a7aeb657a6c7a8c4afc5a09ad3882bd8418faf8f058048e78d45db65"
+  },
+  "version_data": {
+    "not_versioned": true,
+    "versions": {
+      "Default": {
+        "name": "Default",
+        "expires": "3000-01-02 15:04",
+        "use_extended_paths": true,
+        "extended_paths": {
+          "ignored": [],
+          "white_list": [],
+          "black_list": []
+        }
+      }
+    }
+  },
+  "proxy": {
+    "listen_path": "/tykmtls2/",
+    "target_url": "https://kubernetes.docker.internal:8134/sample.html",
+    "strip_listen_path": true
+  },
+  "enable_batch_request_support": true
+}
