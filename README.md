@@ -2,31 +2,34 @@
 ## Installtion
 https://github.com/TykTechnologies/tyk-gateway-docker
 
- 2514  docker network create tyk
+docker network create tyk
 
- 2515  docker network ls
+docker network ls
 
- 2516  docker pull redis:4.0-alpine
+docker pull redis:4.0-alpine
 
- 2517  docker run -itd --rm --name redis --network tyk -p 127.0.0.1:6379:6379 redis:4.0-alpine
+docker run -itd --rm --name redis --network tyk -p 127.0.0.1:6379:6379 redis:4.0-alpine
+
 docker pull mongo
+
 docker run -itd --rm --name mongo --network tyk -p 127.0.0.1:27017:27017 mongo:latest
- 2519  docker pull tykio/tyk-gateway:latest
 
- 2526  git clone https://github.com/TykTechnologies/tyk-gateway-docker.git
+docker pull tykio/tyk-gateway:latest
 
- 2527  cd tyk-gateway-docker
+git clone https://github.com/TykTechnologies/tyk-gateway-docker.git
 
- 2530  docker run -d \\n  --name tyk_gateway \\n  --network tyk \\n  -p 8080:8080 \\n  -v $(pwd)/tyk.standalone.conf:/opt/tyk-gateway/tyk.conf \\n  -v $(pwd)/apps:/opt/tyk-gateway/apps \\n  tykio/tyk-gateway:latest
+cd tyk-gateway-docker [need addtional tweak for dashboard compatibility]
 
- docker run -itd --rm --name tyk-gateway --network tyk -p 8080:8080 -v $(pwd)/tyk.standalone.conf:/opt/tyk-gateway/tyk.conf -v $(pwd)/apps:/opt/tyk-gateway/apps tykio/tyk-gateway:latest
+docker run -itd --rm --name tyk-gateway --network tyk -p 8080:8080 -v $(pwd)/tyk.standalone.conf:/opt/tyk-gateway/tyk.conf -v $(pwd)/apps:/opt/tyk-gateway/apps tykio/tyk-gateway:latest
+
+test community version > curl http://localhost:8080/hello -i
 
 docker run -itd --rm --name tyk-dashboard -p 3000:3000 --link redis --link mongo --link tyk-gateway tykio/tyk-dashboard
 
 docker run -it --rm --name tyk-dashboard --network tyk -p 3000:3000 --link redis --link mongo --link tyk-gateway tykio/tyk-dashboard:latest
 
+test dashboard version> http://dashboard.tyk.docker:3000/ [need license to use]
 
- 2532  curl http://localhost:8080/hello -i
 
  2533  docker ps
 
@@ -135,8 +138,11 @@ https://tyk.io/docs/basic-config-and-security/security/tls-and-ssl/mutual-tls/
 
 https://tyk.io/docs/basic-config-and-security/security/certificate-pinning/
 
+https://tyk.io/docs/tyk-configuration-reference/tyk-gateway-configuration-options/
 
+https://github.com/TykTechnologies/tyk-gateway-docker
 
+https://github.com/TykTechnologies/tyk-dashboard-docker
 
 
 sudo openssl req -x509 -nodes -days 365 -subj '/C=IN/ST=Bangalore/L=ECity/O=Subrata POC Clinet/OU=POC/CN=kubernetes.docker.internal' -newkey rsa:2048 -keyout nginx-client.key -out nginx-client.crt
