@@ -119,6 +119,8 @@ curl -X PUT http://localhost:8080/tyk/apis/2 -H 'x-tyk-authorization: 352d20ee67
 {"key":"2","status":"ok","action":"modified"}
  
  ## Clean up
+ docker container stop $(docker ps -aq)
+ 
  2558  docker ps
 
  2559  docker container ls
