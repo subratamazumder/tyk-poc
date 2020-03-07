@@ -2,6 +2,7 @@
 ## Installtion
 https://github.com/TykTechnologies/tyk-gateway-docker
 
+```console
 docker network create tyk
 
 docker network ls
@@ -35,9 +36,12 @@ docker ps
 
 docker logs --follow tyk_gateway
     
+```
 
 ## Working with Management API 
 https://tyk.io/docs/tyk-rest-api/
+
+```console
 
 curl -X POST http://localhost:8080/tyk/apis/ -H 'x-tyk-authorization: 352d20ee67be67f6340b4c0605b044b7' -H 'Content-Type: application/json' -d @keyless.json
 
@@ -117,8 +121,10 @@ curl -X DELETE http://localhost:8080/tyk/certs/81161276e7801307424120ac929503bf9
 
 curl -X PUT http://localhost:8080/tyk/apis/2 -H 'x-tyk-authorization: 352d20ee67be67f6340b4c0605b044b7' -H 'Content-Type: application/json' -d @api-mtls.json
 {"key":"2","status":"ok","action":"modified"}
+ ```
  
  ## Clean up
+ ```console
  docker container stop $(docker ps -aq)
  
  docker ps
@@ -132,6 +138,7 @@ curl -X PUT http://localhost:8080/tyk/apis/2 -H 'x-tyk-authorization: 352d20ee67
  docker ps
 
  docker container ls
+```
 
 ## Notes
 Sample API JSON https://gist.githubusercontent.com/asoorm/d3adc8b885f8f67a702e2f3789af963d/raw/d534c845c66b3c2a063bd5d1458ca4d10e397bc5/keyless.json
