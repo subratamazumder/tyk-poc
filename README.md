@@ -41,6 +41,7 @@ docker logs --follow tyk_gateway
 ## Working with Management API 
 https://tyk.io/docs/tyk-rest-api/
 
+#### Deploy API
 ```console
 
 curl -X POST http://localhost:8080/tyk/apis/ -H 'x-tyk-authorization: 352d20ee67be67f6340b4c0605b044b7' -H 'Content-Type: application/json' -d @keyless.json
@@ -49,12 +50,16 @@ curl -X GET http://localhost:8080/tyk/reload/ -H 'x-tyk-authorization: 352d20ee6
 
 curl -X PUT http://localhost:8080/tyk/apis/3 -H 'x-tyk-authorization: 352d20ee67be67f6340b4c0605b044b7' -H 'Content-Type: application/json' -d @api-mtls.json
 {"key":"3","status":"ok","action":"modified"}
-
+```
+#### Verify API
+```console
 curl http://localhost:8080/httpbin/get
 
+```
 
-curl -X POST http://localhost:8080/tyk/certs -H 'x-tyk-authorization: 352d20ee67be67f6340b4c0605b044b7' -d @upstream.pem  //didn't work postman worked fine
+#### Upload Certificate
 
+```console
 curl -X POST \
   http://localhost:8080/tyk/certs \
   -H 'Postman-Token: b08dd295-b733-43fd-9443-810107bc0657' \
@@ -109,8 +114,10 @@ fxMkYe4aI//pWtcSTgfqwWAgUMAlwyE8AGucGU4Ujvyp0tow5q0LRQWfb/xqY7lZ
 X5+2h4TU+uP/Drrbq1dryiwR2BJTMiFTBWL8yFC+BAiod+4P0jI2zs03c4WbSm5P
 Mz4FrUiobXPLy5fqinHuzqSKtsou9/2nsR2TNAH9MLvhiY+7
 -----END CERTIFICATE-----'
-
-atas-MacBook-Pro  ~/workspace/nginx-poc/mtls   master  curl -X GET http://localhost:8080/tyk/certs/ -H 'x-tyk-authorization: 352d20ee67be67f6340b4c0605b044b7'
+```
+#### Verify Certificate
+```console
+Subratas-MacBook-Pro  ~/workspace/nginx-poc/mtls   master  curl -X GET http://localhost:8080/tyk/certs/ -H 'x-tyk-authorization: 352d20ee67be67f6340b4c0605b044b7'
 {"certs":["81161276e7801307424120ac929503bf9da703cd5462adb8bd4d361354131a49"]}
  subratas-MacBook-Pro  ~/workspace/nginx-poc/mtls   master  
  
@@ -118,10 +125,18 @@ atas-MacBook-Pro  ~/workspace/nginx-poc/mtls   master  curl -X GET h
 curl -X DELETE http://localhost:8080/tyk/certs/81161276e7801307424120ac929503bf9da703cd5462adb8bd4d361354131a49 'x-tyk-authorization: 352d20ee67be67f6340b4c0605b044b7'
  curl -X GET http://localhost:8080/tyk/certs/81161276e7801307424120ac929503bf9da703cd5462adb8bd4d361354131a49 -H 'x-tyk-authorization: 352d20ee67be67f6340b4c0605b044b7'
 {"id":"81161276e7801307424120ac929503bf9da703cd5462adb8bd4d361354131a49","fingerprint":"81161276e7801307424120ac929503bf9da703cd5462adb8bd4d361354131a49","has_private":true,"issuer":{"Country":["IN"],"Organization":["Subrata POC Clinet"],"OrganizationalUnit":["POC"],"Locality":["ECity"],"Province":["Bangalore"],"StreetAddress":null,"PostalCode":null,"SerialNumber":"","CommonName":"subratapocclient","Names":[{"Type":[2,5,4,6],"Value":"IN"},{"Type":[2,5,4,8],"Value":"Bangalore"},{"Type":[2,5,4,7],"Value":"ECity"},{"Type":[2,5,4,10],"Value":"Subrata POC Clinet"},{"Type":[2,5,4,11],"Value":"POC"},{"Type":[2,5,4,3],"Value":"subratapocclient"}],"ExtraNames":null},"subject":{"Country":["IN"],"Organization":["Subrata POC Clinet"],"OrganizationalUnit":["POC"],"Locality":["ECity"],"Province":["Bangalore"],"StreetAddress":null,"PostalCode":null,"SerialNumber":"","CommonName":"subratapocclient","Names":[{"Type":[2,5,4,6],"Value":"IN"},{"Type":[2,5,4,8],"Value":"Bangalore"},{"Type":[2,5,4,7],"Value":"ECity"},{"Type":[2,5,4,10],"Value":"Subrata POC Clinet"},{"Type":[2,5,4,11],"Value":"POC"},{"Type":[2,5,4,3],"Value":"subratapocclient"}],"ExtraNames":null},"not_before":"2020-02-22T12:47:19Z","not_after":"2021-02-21T12:47:19Z"}
+```
 
+#### Update API with Certificate ID
+```console
 curl -X PUT http://localhost:8080/tyk/apis/2 -H 'x-tyk-authorization: 352d20ee67be67f6340b4c0605b044b7' -H 'Content-Type: application/json' -d @api-mtls.json
 {"key":"2","status":"ok","action":"modified"}
- ```
+```
+#### Verify API
+```console
+curl http://localhost:8080/tykmtls2/
+
+```
  
  ## Clean up
  ```console
@@ -190,86 +205,4 @@ After chnaging server cert to CN as domain name
 [Feb 22 23:49:27] DEBUG Upstream request took (ms): 22.0134
 [Feb 22 23:49:27] DEBUG Done proxy
 ```
-
-
-Verify Server CERT & allowed Client CERT for deployed API on TYK
-```console
-subratas-MacBook-Pro  ~/workspace/tyk-poc   master ●  openssl s_client -connect secure.authenticator.uat.uk.experian.com:443 -servername secure.authenticator.uat.uk.experian.com 2>/dev/null
-CONNECTED(00000005)
----
-Certificate chain
- 0 s:/C=GB/L=Nottinghamshire/O=Experian Limited/CN=secure.authenticator.uat.uk.experian.com
-   i:/C=US/O=Entrust, Inc./OU=See www.entrust.net/legal-terms/OU=(c) 2012 Entrust, Inc. - for authorized use only/CN=Entrust Certification Authority - L1K
- 1 s:/C=US/O=Entrust, Inc./OU=See www.entrust.net/legal-terms/OU=(c) 2012 Entrust, Inc. - for authorized use only/CN=Entrust Certification Authority - L1K
-   i:/C=US/O=Entrust, Inc./OU=See www.entrust.net/legal-terms/OU=(c) 2009 Entrust, Inc. - for authorized use only/CN=Entrust Root Certification Authority - G2
- 2 s:/C=US/O=Entrust, Inc./OU=See www.entrust.net/legal-terms/OU=(c) 2009 Entrust, Inc. - for authorized use only/CN=Entrust Root Certification Authority - G2
-   i:/C=US/O=Entrust, Inc./OU=www.entrust.net/CPS is incorporated by reference/OU=(c) 2006 Entrust, Inc./CN=Entrust Root Certification Authority
- 3 s:/C=US/O=Entrust, Inc./OU=www.entrust.net/CPS is incorporated by reference/OU=(c) 2006 Entrust, Inc./CN=Entrust Root Certification Authority
-   i:/C=US/O=Entrust, Inc./OU=www.entrust.net/CPS is incorporated by reference/OU=(c) 2006 Entrust, Inc./CN=Entrust Root Certification Authority
----
-Server certificate
------BEGIN CERTIFICATE-----
-MIIFijCCBHKgAwIBAgIRAPpOiH4NMJSdAAAAAFDtbfMwDQYJKoZIhvcNAQELBQAw
-gboxCzAJBgNVBAYTAlVTMRYwFAYDVQQKEw1FbnRydXN0LCBJbmMuMSgwJgYDVQQL
-Ex9TZWUgd3d3LmVudHJ1c3QubmV0L2xlZ2FsLXRlcm1zMTkwNwYDVQQLEzAoYykg
-MjAxMiBFbnRydXN0LCBJbmMuIC0gZm9yIGF1dGhvcml6ZWQgdXNlIG9ubHkxLjAs
-BgNVBAMTJUVudHJ1c3QgQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkgLSBMMUswHhcN
-MTkwMjExMTMxMzUzWhcNMjAwMjI4MTM0MzUyWjB1MQswCQYDVQQGEwJHQjEYMBYG
-A1UEBxMPTm90dGluZ2hhbXNoaXJlMRkwFwYDVQQKExBFeHBlcmlhbiBMaW1pdGVk
-MTEwLwYDVQQDEyhzZWN1cmUuYXV0aGVudGljYXRvci51YXQudWsuZXhwZXJpYW4u
-Y29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA6pCMrkw8FBTwNpTa
-xZrhv+HjATWF5dJmO6++Qbg0lovw0V4qVhYqC9zIRODmOuOHER7Vzc/PiiQQXEtV
-CQtsQBt68Wzyql5CtqK/uIIzhaRK+7GbCEajaud3nDukwdf86MUrGAnDbZchiUe/
-A+DzrA/VXQ/+C73QgLNbcuLpAFfAB9cbb8uvkERyWzDwYQTmLlIynsFzK/q0CY2h
-SZgPF7uhmqprGGifEWlgQBT/50AZCAMCZfN8ZGuBDAMEkGRatSXFFWnYcngpvILL
-ukRNhavkQieyWQS2w6EtwZEtcVMIRJ9PSi0berJWgq97tbvvx8bQyb9qTMGzHo4k
-/xu4jQIDAQABo4IBzTCCAckwDgYDVR0PAQH/BAQDAgWgMB0GA1UdJQQWMBQGCCsG
-AQUFBwMBBggrBgEFBQcDAjAzBgNVHR8ELDAqMCigJqAkhiJodHRwOi8vY3JsLmVu
-dHJ1c3QubmV0L2xldmVsMWsuY3JsMEsGA1UdIAREMEIwNgYKYIZIAYb6bAoBBTAo
-MCYGCCsGAQUFBwIBFhpodHRwOi8vd3d3LmVudHJ1c3QubmV0L3JwYTAIBgZngQwB
-AgIwaAYIKwYBBQUHAQEEXDBaMCMGCCsGAQUFBzABhhdodHRwOi8vb2NzcC5lbnRy
-dXN0Lm5ldDAzBggrBgEFBQcwAoYnaHR0cDovL2FpYS5lbnRydXN0Lm5ldC9sMWst
-Y2hhaW4yNTYuY2VyMGEGA1UdEQRaMFiCKHNlY3VyZS5hdXRoZW50aWNhdG9yLnVh
-dC51ay5leHBlcmlhbi5jb22CLHd3dy5zZWN1cmUuYXV0aGVudGljYXRvci51YXQu
-dWsuZXhwZXJpYW4uY29tMB8GA1UdIwQYMBaAFIKicHTdvFM/z3vU981/p2DGCky/
-MB0GA1UdDgQWBBSg0DeIs4jScnj0dYBhVBHu4x10+jAJBgNVHRMEAjAAMA0GCSqG
-SIb3DQEBCwUAA4IBAQA2GvRZVoHKmBuKkbfL4id2UczsfFxYh1eHgPImPHY9CATe
-GWyW0k/bWemtDCLpGJJfq4lrJWqrfDIGAfipM6+tZ4KR72NrOVbQcVVH231A94rg
-CWNHjw2EUi4MpIHRHuObJdfVhROZGXPZLj38eI9sfw1tFi/015Y5egqSS7DShKOH
-G6lJ0lKLlLwjvL82BIG1uTbLRVYc3eMalOZ0ItI+XewJsoSJX9wLQkZffmV0Zklt
-sJZ++I/YlkvPOfFe4ubUdJ47B5sxuyoZP8rK/mOHkOMA/Np8uO317bFzF3Y43kWQ
-T8dTRaQCSc4M1eyg4uOmRDfO/4ox+ntrgYVnUizs
------END CERTIFICATE-----
-subject=/C=GB/L=Nottinghamshire/O=Experian Limited/CN=secure.authenticator.uat.uk.experian.com
-issuer=/C=US/O=Entrust, Inc./OU=See www.entrust.net/legal-terms/OU=(c) 2012 Entrust, Inc. - for authorized use only/CN=Entrust Certification Authority - L1K
----
-Acceptable client certificate CA names
-/C=US/O=Entrust/OU=Certification Authorities/OU=Entrust Managed Services Commercial Private Root CA
-/C=US/O=Entrust/OU=Certification Authorities/OU=Entrust Managed Services Demo SubCA 2
-/C=US/O=Entrust/OU=Certification Authorities/OU=Entrust Managed Services Demo SubCA 2
-/DC=COM/DC=EXPERIAN/DC=UK/O=UAT CERTIFICATE AUTHORITY/CN=EXPERIAN TRUSTED ROOT CA
-/C=US/O=Entrust/OU=Certification Authorities/OU=Commercial Private Sub CA1
-/C=US/O=Entrust/OU=Certification Authorities/OU=DComRootCA
-/C=US/O=Entrust/OU=Certification Authorities/OU=DComRootCA
----
-SSL handshake has read 6121 bytes and written 330 bytes
----
-New, TLSv1/SSLv3, Cipher is AES128-GCM-SHA256
-Server public key is 2048 bit
-Secure Renegotiation IS supported
-Compression: NONE
-Expansion: NONE
-No ALPN negotiated
-SSL-Session:
-    Protocol  : TLSv1.2
-    Cipher    : AES128-GCM-SHA256
-    Session-ID: 6868E55EFCBF0FC92140266CDFB13C4F77898B02019BC0E8B4030285846C1B14
-    Session-ID-ctx:
-    Master-Key: 740542CDF89E94CECA6E716ED7BD73CB3CF1FE6E6B519D02A83CF41481318F78BEFC62E781084DC620E7EADF902220F0
-    Start Time: 1582414879
-    Timeout   : 7200 (sec)
-    Verify return code: 0 (ok)
----
- ✘ subratas-MacBook-Pro  ~/workspace/tyk-poc   master ● 
- ```
  
