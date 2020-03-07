@@ -1,4 +1,4 @@
-# tyk-poc
+# tyk-poc Mutual TLS & Certificate Pinning
 ## Installtion
 https://github.com/TykTechnologies/tyk-gateway-docker
 
@@ -31,12 +31,12 @@ docker run -it --rm --name tyk-dashboard --network tyk -p 3000:3000 --link redis
 test dashboard version> http://dashboard.tyk.docker:3000/ [need license to use]
 
 
- 2533  docker ps
+docker ps
 
- 2534  docker logs --follow tyk_gateway
+docker logs --follow tyk_gateway
     
 
-## Management API 
+## Working with Management API 
 https://tyk.io/docs/tyk-rest-api/
 
 curl -X POST http://localhost:8080/tyk/apis/ -H 'x-tyk-authorization: 352d20ee67be67f6340b4c0605b044b7' -H 'Content-Type: application/json' -d @keyless.json
@@ -111,7 +111,7 @@ atas-MacBook-Pro  ~/workspace/nginx-poc/mtls   master  curl -X GET h
  subratas-MacBook-Pro  ~/workspace/nginx-poc/mtls   master  
  
  
- curl -X DELETE http://localhost:8080/tyk/certs/81161276e7801307424120ac929503bf9da703cd5462adb8bd4d361354131a49 'x-tyk-authorization: 352d20ee67be67f6340b4c0605b044b7'
+curl -X DELETE http://localhost:8080/tyk/certs/81161276e7801307424120ac929503bf9da703cd5462adb8bd4d361354131a49 'x-tyk-authorization: 352d20ee67be67f6340b4c0605b044b7'
  curl -X GET http://localhost:8080/tyk/certs/81161276e7801307424120ac929503bf9da703cd5462adb8bd4d361354131a49 -H 'x-tyk-authorization: 352d20ee67be67f6340b4c0605b044b7'
 {"id":"81161276e7801307424120ac929503bf9da703cd5462adb8bd4d361354131a49","fingerprint":"81161276e7801307424120ac929503bf9da703cd5462adb8bd4d361354131a49","has_private":true,"issuer":{"Country":["IN"],"Organization":["Subrata POC Clinet"],"OrganizationalUnit":["POC"],"Locality":["ECity"],"Province":["Bangalore"],"StreetAddress":null,"PostalCode":null,"SerialNumber":"","CommonName":"subratapocclient","Names":[{"Type":[2,5,4,6],"Value":"IN"},{"Type":[2,5,4,8],"Value":"Bangalore"},{"Type":[2,5,4,7],"Value":"ECity"},{"Type":[2,5,4,10],"Value":"Subrata POC Clinet"},{"Type":[2,5,4,11],"Value":"POC"},{"Type":[2,5,4,3],"Value":"subratapocclient"}],"ExtraNames":null},"subject":{"Country":["IN"],"Organization":["Subrata POC Clinet"],"OrganizationalUnit":["POC"],"Locality":["ECity"],"Province":["Bangalore"],"StreetAddress":null,"PostalCode":null,"SerialNumber":"","CommonName":"subratapocclient","Names":[{"Type":[2,5,4,6],"Value":"IN"},{"Type":[2,5,4,8],"Value":"Bangalore"},{"Type":[2,5,4,7],"Value":"ECity"},{"Type":[2,5,4,10],"Value":"Subrata POC Clinet"},{"Type":[2,5,4,11],"Value":"POC"},{"Type":[2,5,4,3],"Value":"subratapocclient"}],"ExtraNames":null},"not_before":"2020-02-22T12:47:19Z","not_after":"2021-02-21T12:47:19Z"}
 
@@ -121,17 +121,17 @@ curl -X PUT http://localhost:8080/tyk/apis/2 -H 'x-tyk-authorization: 352d20ee67
  ## Clean up
  docker container stop $(docker ps -aq)
  
- 2558  docker ps
+ docker ps
 
- 2559  docker container ls
+ docker container ls
 
- 2560  docker container stop tyk_gateway
+ docker container stop tyk_gateway
 
- 2561  docker container stop redis
+ docker container stop redis
 
- 2562  docker ps
+ docker ps
 
- 2563  docker container ls
+ docker container ls
 
 ## Notes
 Sample API JSON https://gist.githubusercontent.com/asoorm/d3adc8b885f8f67a702e2f3789af963d/raw/d534c845c66b3c2a063bd5d1458ca4d10e397bc5/keyless.json
@@ -149,7 +149,7 @@ https://github.com/TykTechnologies/tyk-dashboard-docker
 
 sudo openssl req -x509 -nodes -days 365 -subj '/C=IN/ST=Bangalore/L=ECity/O=Subrata POC Clinet/OU=POC/CN=kubernetes.docker.internal' -newkey rsa:2048 -keyout nginx-client.key -out nginx-client.crt
 
-## Errors
+## Errors Encountered
 Only client cert has CN as domain name
 [Feb 22 23:03:00] DEBUG Started proxy
 [Feb 22 23:03:00] DEBUG Stripping: /tykmtls1/
