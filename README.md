@@ -158,6 +158,7 @@ sudo openssl req -x509 -nodes -days 365 -subj '/C=IN/ST=Bangalore/L=ECity/O=Subr
 
 ## Errors Encountered
 Only client cert has CN as domain name
+```
 [Feb 22 23:03:00] DEBUG Started proxy
 [Feb 22 23:03:00] DEBUG Stripping: /tykmtls1/
 [Feb 22 23:03:00] DEBUG Upstream Path is: 
@@ -171,10 +172,10 @@ Only client cert has CN as domain name
 [Feb 22 23:03:00] DEBUG Finished api_id=3 api_name=Tyk mtls 1 mw=ReverseProxy ns=11206100 org_id=default
 [Feb 22 23:03:00] DEBUG Upstream request took (ms): 11.258
 [Feb 22 23:03:00] DEBUG Done proxy
-
+```
 
 After chnaging server cert to CN as domain name
-
+```
 [Feb 22 23:49:27] DEBUG Started proxy
 [Feb 22 23:49:27] DEBUG Stripping: /tykmtls2/
 [Feb 22 23:49:27] DEBUG Upstream Path is: 
@@ -188,10 +189,11 @@ After chnaging server cert to CN as domain name
 [Feb 22 23:49:27] DEBUG Finished api_id=4 api_name=Tyk mtls 2 mw=ReverseProxy ns=21307800 org_id=default
 [Feb 22 23:49:27] DEBUG Upstream request took (ms): 22.0134
 [Feb 22 23:49:27] DEBUG Done proxy
+```
 
 
-
-
+Verify Server CERT & allowed Client CERT for deployed API on TYK
+```console
 subratas-MacBook-Pro  ~/workspace/tyk-poc   master ●  openssl s_client -connect secure.authenticator.uat.uk.experian.com:443 -servername secure.authenticator.uat.uk.experian.com 2>/dev/null
 CONNECTED(00000005)
 ---
@@ -269,3 +271,5 @@ SSL-Session:
     Verify return code: 0 (ok)
 ---
  ✘ subratas-MacBook-Pro  ~/workspace/tyk-poc   master ● 
+ ```
+ 
